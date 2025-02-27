@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Ayat Surah</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        #quiz-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            position: relative;
+        }
+        #score-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .start-btn { background-color: #28a745; color: white; }
+        .next-btn { background-color: #007bff; color: white; }
+        .new-btn { background-color: #e1ff00; color: black; }
+        .exit-btn { background-color: #dc3545; color: white; }
+        input {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .option-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #17a2b8;
+            color: white;
+        }
+        .option-btn:hover {
+            background-color: #138496;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="score-container">✅ 0 ❌ 0</div> <!-- Skor di pojok atas -->
+        <h2>Quiz Ayat Surah Al-Qur'an</h2>
+        <p id="question">Pilih mode quiz:</p>
+        <button class="start-btn" onclick="startQuiz('random')">Random Surah & Ayat</button>
+        <button class="start-btn" onclick="chooseSurah()">Pilih Surah</button>
+        <br>
+        <p id="surah-info"></p>
+        <input type="text" id="user-answer" style="display:none;" placeholder="Masukkan jawaban">
+        <div id="options-container" style="margin-top: 10px;"></div>
+        <button class="next-btn" onclick="checkAnswer()" style="display:none;">Submit</button>
+        <button class="new-btn" onclick="pickNewSurah()" style="display:none;">Next</button>
+        <button class="exit-btn" onclick="exitQuiz()" style="display:none;">Exit</button>
+    </div>
+    
+    <script>
+        const surahData = {
+            "Al-Kafirun": { 
+                noSurah: 109, 
+                ayat: { 
+                    "1": { halaman: 603, posisi: "kanan", letak: "atas" },
+                    "2": { halaman: 603, posisi: "kanan", letak: "atas" }, 
+                    "3": { halaman: 603, posisi: "kanan", letak: "atas" }, 
+                    "4": { halaman: 603, posisi: "kanan", letak: "atas" }, 
+                    "5": { halaman: 603, posisi: "kanan", letak: "atas" }, 
+                    "6": { halaman: 603, posisi: "kanan", letak: "atas" }
+                } 
+            },
+            "An-Nasr": { 
+                noSurah: 110, 
+                ayat: { 
+                    "1": { halaman: 603, posisi: "kanan", letak: "tengah" },
+                    "2": { halaman: 603, posisi: "kanan", letak: "tengah" },
+                    "3": { halaman: 603, posisi: "kanan", letak: "tengah" }
+                } 
+            },
+            "Al-Lahab": { 
+                noSurah: 111, 
+                ayat: { 
+                    "1": { halaman: 603, posisi: "kanan", letak: "bawah" }, 
+                    "2": { halaman: 603, posisi: "kanan", letak: "bawah" }, 
+                    "3": { halaman: 603, posisi: "kanan", letak: "bawah" }, 
+                    "4": { halaman: 603, posisi: "kanan", letak: "bawah" }, 
+                    "5": { halaman: 603, posisi: "kanan", letak: "bawah" }
+                } 
+            },
+            "Al-Ikhlas": { 
+                noSurah: 112, 
+                ayat: { 
+                    "1": { halaman: 604, posisi: "kiri", letak: "atas" },
+                    "2": { halaman: 604, posisi: "kiri", letak: "atas" },
+                    "3": { halaman: 604, posisi: "kiri", letak: "atas" },
+                    "4": { halaman: 604, posisi: "kiri", letak: "atas" }
+                } 
+            },
+            "Al-Falaq": { 
+                noSurah: 113, 
+                ayat: { 
+                    "1": { halaman: 604, posisi: "kiri", letak: "tengah" },
+                    "2": { halaman: 604, posisi: "kiri", letak: "tengah" },
+                    "3": { halaman: 604, posisi: "kiri", letak: "tengah" },
+                    "4": { halaman: 604, posisi: "kiri", letak: "tengah" },
+                    "5": { halaman: 604, posisi: "kiri", letak: "tengah" }
+                } 
+            },
+            "An-Nas": { 
+                noSurah: 114, 
+                ayat: { 
+                    "1": { halaman: 604, posisi: "kiri", letak: "bawah" },
+                    "2": { halaman: 604, posisi: "kiri", letak: "bawah" },
+                    "3": { halaman: 604, posisi: "kiri", letak: "bawah" },
+                    "4": { halaman: 604, posisi: "kiri", letak: "bawah" },
+                    "5": { halaman: 604, posisi: "kiri", letak: "bawah" },
+                    "6": { halaman: 604, posisi: "kiri", letak: "bawah" }
+                } 
+            }
+        };
+        
+        let selectedSurah = null;
+        let selectedAyat = null;
+        let step = 0;
+        let correctAnswer = "";
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        function updateScore() {
+            document.getElementById("score-container").textContent = `✅ ${correctCount} ❌ ${wrongCount}`;
+        }
+
+        function startQuiz(mode) {
+            let surahKeys = Object.keys(surahData);
+            selectedSurah = surahKeys[Math.floor(Math.random() * surahKeys.length)];
+            let ayatKeys = Object.keys(surahData[selectedSurah].ayat);
+            selectedAyat = ayatKeys[Math.floor(Math.random() * ayatKeys.length)];
+            correctCount = 0;
+            wrongCount = 0;
+            step = 0;
+            updateScore();
+            nextQuestion();
+        }
+
+        function pickNewSurah() {
+            step = 0;
+            let surahKeys = Object.keys(surahData);
+            selectedSurah = surahKeys[Math.floor(Math.random() * surahKeys.length)];
+            let ayatKeys = Object.keys(surahData[selectedSurah].ayat);
+            selectedAyat = ayatKeys[Math.floor(Math.random() * ayatKeys.length)];
+            document.getElementById("surah-info").textContent = `Surah: ${selectedSurah}`;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            document.getElementById("options-container").innerHTML = ""; // Bersihkan pilihan lama
+            document.getElementById("surah-info").textContent = "";
+            document.getElementById("question").textContent = getQuestion();
+            document.getElementById("user-answer").value = "";
+            document.getElementById("user-answer").focus();
+            document.querySelector(".next-btn").style.display = "inline";
+            if (step === 0){
+                document.getElementById("user-answer").style.display = "inline";
+                document.getElementById("options-container").style.display = "none"; // Pastikan terlihat
+                document.querySelector(".new-btn").style.display = "none";
+                document.querySelector(".exit-btn").style.display = "inline";
+                document.querySelector(".next-btn").style.display = "inline";
+            } else if (step === 3 || step === 4) {
+                document.getElementById("user-answer").style.display = "none";
+                document.getElementById("options-container").style.display = "block"; // Pastikan terlihat
+                document.querySelector(".next-btn").style.display = "none";
+            } else if (step === 5) {
+                document.getElementById("options-container").style.display = "none"; // Sembunyikan jika tidak dibutuhkan
+                document.querySelector(".next-btn").style.display = "none";
+                document.querySelector(".new-btn").style.display = "inline";
+            } else {
+                document.querySelector(".exit-btn").style.display = "none";
+            }
+        }
+
+        // Fungsi mendapatkan pertanyaan sesuai step
+        function getQuestion() {
+            if (step === 0) {
+                correctAnswer = surahData[selectedSurah].noSurah.toString();
+                return `Nomor Surah ${selectedSurah} ?`;
+            } else if (step === 1) {
+                let ayatKeys = Object.keys(surahData[selectedSurah].ayat);
+                correctAnswer = ayatKeys[ayatKeys.length - 1];
+                return `Berapa total ayat dalam Surah ${selectedSurah}?`;
+            } else if (step === 2) {
+                correctAnswer = surahData[selectedSurah].ayat[selectedAyat].halaman.toString();
+                return `Pada halaman berapa Surah ${selectedSurah} Ayat ${selectedAyat} berada`;
+            } else if (step === 3) {
+                correctAnswer = surahData[selectedSurah].ayat[selectedAyat].posisi;
+                showOptions(["kiri", "kanan"]); // Tampilkan pilihan kanan/kiri
+                return `Di sisi mana Surah ${selectedSurah} Ayat ${selectedAyat} ini berada?`;
+            } else if (step === 4) {
+                correctAnswer = surahData[selectedSurah].ayat[selectedAyat].letak;
+                showOptions(["atas", "tengah", "bawah"]); // Tampilkan pilihan atas/tengah/bawah
+                return `Di bagian mana Surah ${selectedSurah} Ayat ${selectedAyat} ini berada pada halaman?`;
+            } else if (step === 5) {
+                return `Bacakan Surah ${selectedSurah} Ayat ${selectedAyat}`;
+            }
+        }
+
+        // Fungsi untuk menampilkan tombol pilihan
+        function showOptions(options) {
+            let container = document.getElementById("options-container");
+            container.innerHTML = ""; // Bersihkan opsi sebelumnya
+            container.style.display = "block"; // Pastikan opsi terlihat
+
+            options.forEach(option => {
+                let button = document.createElement("button");
+                button.textContent = option;
+                button.classList.add("option-btn");
+                button.onclick = function() { checkOption(option); };
+                container.appendChild(button);
+            });
+        }
+
+        // Fungsi pengecekan jawaban untuk tombol pilihan
+        function checkOption(selected) {
+            if (selected.toLowerCase() === correctAnswer.toLowerCase()) {
+                if (step === 4) {
+                    correctCount++;
+                    updateScore(); // Tambah poin hanya jika ini soal terakhir
+                }
+                step++;
+                nextQuestion();
+            } else {
+                wrongCount++; // Poin salah tetap bertambah jika salah
+                updateScore();
+                step = 0;
+                pickNewSurah();
+                nextQuestion();
+            }
+        }
+
+        function checkAnswer() {
+            let userInput = document.getElementById("user-answer").value.trim().toLowerCase();
+            if (userInput !== correctAnswer.toLowerCase()) {
+                wrongCount++;
+                updateScore();
+                step = 0;
+                pickNewSurah();
+                nextQuestion();
+            }else{
+                step++;
+                updateScore();
+                nextQuestion();
+            }
+            
+        }
+
+        function exitQuiz() {
+            let totalQuestions = correctCount + wrongCount;
+            let accuracy = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(2) : 0;
+
+            document.getElementById("question").textContent = "Quiz selesai. Terima kasih!";
+            document.getElementById("surah-info").textContent = `Persentase benar Anda: ${accuracy}%`;
+            document.getElementById("user-answer").style.display = "none";
+            document.querySelector(".next-btn").style.display = "none";
+            document.querySelector(".exit-btn").style.display = "none";
+        }
+    </script>
+</body>
+</html>
