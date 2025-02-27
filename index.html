@@ -68,7 +68,7 @@
         <h2>Quiz Ayat Surah Al-Qur'an</h2>
         <p id="question">Pilih mode quiz:</p>
         <button class="start-btn" onclick="startQuiz('random')">Random Surah & Ayat</button>
-        <button class="start-btn" onclick="chooseSurah()">Pilih Surah</button>
+        <!-- <button class="start-btn" onclick="chooseSurah()">Pilih Surah</button> -->
         <br>
         <p id="surah-info"></p>
         <input type="text" id="user-answer" style="display:none;" placeholder="Masukkan jawaban">
@@ -181,7 +181,9 @@
             document.getElementById("user-answer").value = "";
             document.getElementById("user-answer").focus();
             document.querySelector(".next-btn").style.display = "inline";
-            if (step === 0){
+            document.querySelectorAll(".start-btn").forEach(btn => btn.style.display = "none");
+
+            if (step === 0) {
                 document.getElementById("user-answer").style.display = "inline";
                 document.getElementById("options-container").style.display = "none"; // Pastikan terlihat
                 document.querySelector(".new-btn").style.display = "none";
@@ -199,6 +201,7 @@
                 document.querySelector(".exit-btn").style.display = "none";
             }
         }
+
 
         // Fungsi mendapatkan pertanyaan sesuai step
         function getQuestion() {
@@ -283,6 +286,7 @@
             document.getElementById("user-answer").style.display = "none";
             document.querySelector(".next-btn").style.display = "none";
             document.querySelector(".exit-btn").style.display = "none";
+            document.querySelectorAll(".start-btn").forEach(btn => btn.style.display = "inline");
         }
     </script>
 </body>
