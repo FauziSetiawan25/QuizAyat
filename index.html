@@ -71,7 +71,7 @@
         <!-- <button class="start-btn" onclick="chooseSurah()">Pilih Surah</button> -->
         <br>
         <p id="surah-info"></p>
-        <input type="text" id="user-answer" style="display:none;" placeholder="Masukkan jawaban">
+        <input type="number" id="user-answer" style="display:none;" placeholder="Masukkan jawaban">
         <div id="options-container" style="margin-top: 10px;"></div>
         <button class="next-btn" onclick="checkAnswer()" style="display:none;">Submit</button>
         <button class="new-btn" onclick="pickNewSurah()" style="display:none;">Next</button>
@@ -80,6 +80,35 @@
     
     <script>
         const surahData = {
+            "Al-Qoriah": { 
+                noSurah: 101, 
+                ayat: { 
+                    "1": { halaman: 600, posisi: "kiri", letak: "atas" },
+                    "2": { halaman: 600, posisi: "kiri", letak: "atas" }, 
+                    "3": { halaman: 600, posisi: "kiri", letak: "atas" }, 
+                    "4": { halaman: 600, posisi: "kiri", letak: "atas" }, 
+                    "5": { halaman: 600, posisi: "kiri", letak: "tengah" }, 
+                    "6": { halaman: 600, posisi: "kiri", letak: "tengah" },
+                    "7": { halaman: 600, posisi: "kiri", letak: "tengah" },
+                    "8": { halaman: 600, posisi: "kiri", letak: "tengah" },
+                    "9": { halaman: 600, posisi: "kiri", letak: "tengah" },
+                    "10": { halaman: 600, posisi: "kiri", letak: "tengah" },
+                    "11": { halaman: 600, posisi: "kiri", letak: "tengah" }
+                } 
+            },
+            "At-Takatsur": { 
+                noSurah: 102, 
+                ayat: { 
+                    "1": { halaman: 600, posisi: "kiri", letak: "bawah" },
+                    "2": { halaman: 600, posisi: "kiri", letak: "bawah" }, 
+                    "3": { halaman: 600, posisi: "kiri", letak: "bawah" }, 
+                    "4": { halaman: 600, posisi: "kiri", letak: "bawah" }, 
+                    "5": { halaman: 600, posisi: "kiri", letak: "bawah" }, 
+                    "6": { halaman: 600, posisi: "kiri", letak: "bawah" },
+                    "7": { halaman: 600, posisi: "kiri", letak: "bawah" },
+                    "8": { halaman: 600, posisi: "kiri", letak: "bawah" }
+                } 
+            },
             "Al-Asr": { 
                 noSurah: 103, 
                 ayat: { 
